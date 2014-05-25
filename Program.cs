@@ -11,7 +11,7 @@ using System.Drawing.Imaging;
 using System.Diagnostics;
 using System.Threading;
 
-namespace CamServerOne
+namespace AutoCar
 {
 	class Program
 	{

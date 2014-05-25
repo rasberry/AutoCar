@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 //http://www.codeproject.com/Articles/137979/Simple-HTTP-Server-in-C
 
-namespace CamServerOne
+namespace AutoCar
 {
 	class SimpleServer : HttpServer
 	{
 		const string index =
-@"<!DOCTYPE HTML><html>
+@"<!DOCTYPE HTML>
+<html>
 <head>
-	<title>CamServerOne</title>	<script src=""jquery.js""></script>	<script src=""main.js""></script>	<link type=""text/css"" rel=""stylesheet"" href=""main.css""></link></head>
+	<title>CamServerOne</title>
+	<script src=""jquery.js""></script>
+	<script src=""main.js""></script>
+	<link type=""text/css"" rel=""stylesheet"" href=""main.css""></link>
+</head>
 <body>
 	<div id=""vidwrap""></div>
 </body>

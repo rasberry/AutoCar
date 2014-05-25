@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace CamServerOne
+namespace AutoCar
 {
 	public class LockBitmap
 	{

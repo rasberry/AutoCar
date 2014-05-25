@@ -12,7 +12,7 @@ using System.Threading;
 // simple HTTP explanation
 // http://www.jmarshall.com/easy/http/
 
-namespace CamServerOne
+namespace AutoCar
 {
 	public class HttpProcessor
 	{

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Video4Linux.Analog;
 using Video4Linux.Analog.Video;
 
-namespace CamServerOne
+namespace AutoCar
 {
 	class VideoGrabber
 	{

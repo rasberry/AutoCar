@@ -7,8 +7,8 @@
     <ProjectGuid>{5D5F5D6B-5E7A-4975-A535-43BEA26A520B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CamServerOne</RootNamespace>
-    <AssemblyName>CamServerOne</AssemblyName>
+    <RootNamespace>AutoCar</RootNamespace>
+    <AssemblyName>AutoCar</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,7 +41,6 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Crc32.cs" />
     <Compile Include="SimpleHttpServer.cs" />
     <Compile Include="LockBitmap.cs" />
     <Compile Include="Program.cs" />

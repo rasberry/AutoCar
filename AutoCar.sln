@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
 VisualStudioVersion = 12.0.30324.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamServerOne", "CamServerOne.csproj", "{5D5F5D6B-5E7A-4975-A535-43BEA26A520B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCar", "AutoCar.csproj", "{5D5F5D6B-5E7A-4975-A535-43BEA26A520B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "v4l-net", "v4l-net\v4l-net.csproj", "{1AE86BF7-6DDC-48ED-915D-90F022F24E7D}"
 EndProject
