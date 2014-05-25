@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace CamTest2
+namespace CamTest3
 {
 	public class LockBitmap
 	{

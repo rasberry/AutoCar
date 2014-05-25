@@ -10,58 +10,109 @@ using Video4Linux.Analog.Video;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 
-namespace CamTest2
+namespace CamTest3
 {
 	class Program
 	{
 		static void Main(string[] args)
 		{
 			ParseArgs(args);
-			var adapter = new Adapter(Device);
-			Pic(adapter);
+			var adapterone = new Adapter(DeviceOne);
+			var adaptertwo = new Adapter(DeviceTwo);
+			VideoCaptureFormat fone, ftwo;
+			
+			byte[] bufferone = Init(adapterone,out fone);
+			byte[] buffertwo = Init(adaptertwo,out ftwo);
+			byte[] bufferdif = new byte[fone.Width*fone.Height*2];
+
+			adapterone.StartStreaming();
+			adaptertwo.StartStreaming();
+
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+			WL("started "+(Console.KeyAvailable?"haskey":"nokey"));
+
+			try {
+				while(!Console.KeyAvailable)
+				{
+					int rone = adapterone.VideoStream.Read(bufferone,0,bufferone.Length);
+					int rtwo = adaptertwo.VideoStream.Read(buffertwo,0,buffertwo.Length);
+					WL("Read "+rone+","+rtwo+" bytes");
+					long stamp = sw.ElapsedTicks;
+					
+					//RawToBitmap("_1",fone,bufferone,false);
+					//RawToBitmap("_2",ftwo,buffertwo,false);
+					
+					//RawToPGM("C1",stamp,fone,bufferone,true);
+					//RawToPGM("C2",stamp,ftwo,buffertwo,true);
+					//WL("ellapsed "+sw.ElapsedMilliseconds);
+					
+					DiffImage(bufferone,buffertwo,bufferdif);
+					RawToPGM("D",stamp,fone,bufferdif,true);
+					WL("ellapsed "+sw.ElapsedMilliseconds);
+				}
+			} finally {
+				adapterone.StopStreaming();
+				adaptertwo.StopStreaming();
+			}
 		}
 
-		static string Device = null;
-		static string OutputFile = null;
-		static int FrameCount = 0;
+		static byte[] Init(Adapter adapter, out VideoCaptureFormat format)
+		{
+			format = new VideoCaptureFormat() {
+				Field = Video4Linux.Analog.Kernel.v4l2_field.Any
+				,Width = 358,Height = 288
+				,PixelFormat = Video4Linux.Analog.Kernel.v4l2_pix_format_id.GREY
+			};
+			adapter.SetFormat(format);
+			//adapter.GetFormat(format);
+			int count = (int)(format.Width*format.Height*2);
+			byte[] buffer = new byte[count];
+			WL("Method "+adapter.CaptureMethod+" "+format.Width+" "+format.Height+" "+format.PixelFormat+" "+format.Field+" "+format.BytesPerLine+" "+count);
+			return buffer;
+		}
+
+		static void Read(Adapter adapter,byte[] buffer)
+		{
+			int r = adapter.VideoStream.Read(buffer,0,buffer.Length);
+			WL("Read "+r+" bytes");
+		}
+
+		static string DeviceOne = null;
+		static string DeviceTwo = null;
+
 		static void ParseArgs(string[] args)
 		{
 			int len = args.Length;
 			for(int i=0; i<len; i++)
 			{
 				string c = args[i];
-				if (c == "-d" && len>i) { Device = args[++i]; }
-				else if (c == "-c" && len>i) { FrameCount = int.Parse(args[++i]); }
-				else if (OutputFile == null) { OutputFile = c; }
+				if (c == "-d" && len>i) {
+					if (DeviceOne == null) {
+						DeviceOne = args[++i];
+					} else {
+						DeviceTwo = args[++i];
+					}
+				}
 			}
-			if (Device == null) { Device = "/dev/video0"; }
-			if (OutputFile == null) { OutputFile = "test.bin"; }
+			if (DeviceOne == null) { DeviceOne = "/dev/video0"; }
+			if (DeviceTwo == null) { DeviceTwo = "/dev/video1"; }
 		}
 
-		static void Pic(Adapter adapter)
+		static void RawToPGM(string extra,long stamp, VideoCaptureFormat format, byte[] buffer, bool save)
 		{
-			VideoCaptureFormat format = new VideoCaptureFormat();
-			adapter.GetFormat(format);
-			Stopwatch timer = new Stopwatch();;
-			timer.Start();
-			int count = (int)(format.Width*format.Height*2);
-			byte[] buffer = new byte[count];
-
-			WL("Method "+adapter.CaptureMethod+" "+format.Width+" "+format.Height+" "+format.PixelFormat+" "+format.Field+" "+format.BytesPerLine);
-	
-			adapter.StartStreaming();
-			for(int f=0; f<FrameCount; f++)
-			{
-				int r = adapter.VideoStream.Read(buffer,0,count);
-				WL("Read "+r+" bytes");
-				Bitmap bmp = RawToBitmap(format,buffer);
-				WL("frame "+f+" "+timer.ElapsedMilliseconds);
-			}
-			adapter.StopStreaming();
-			timer.Stop();
+			if (!save) { return; }
+			int w = (int)format.Width, h = (int)format.Height;
+			string name = stamp.ToString("000000000000") + extra + ".pgm";
+			FileStream fs = File.Open(name,FileMode.CreateNew,FileAccess.Write,FileShare.Read);
+			string header = "P5 "+w+" "+h+" 65535 ";
+			byte[] bh = Encoding.ASCII.GetBytes(header);
+			fs.Write(bh,0,bh.Length);
+			fs.Write(buffer,0,buffer.Length);
+			fs.Close();
 		}
 
-		static Bitmap RawToBitmap(VideoCaptureFormat format, byte[] buffer)
+		static void RawToBitmap(string extra, long stamp, VideoCaptureFormat format, byte[] buffer, bool save)
 		{
 			int w = (int)format.Width, h = (int)format.Height;
 			Color[] argb = YUV422toARGB8888(buffer, w, h);
@@ -78,10 +129,22 @@ namespace CamTest2
 				}
 			}
 			lbmp.UnlockBits();
-			string file = OutputFile + DateTime.Now.Ticks + ".png";
-			bmp.Save(file, ImageFormat.Png);
-			//File.WriteAllBytes(OutputFile,ConvertToRGB(buffer));
-			return bmp;
+			if (save) {
+				string name = stamp.ToString("000000000000") + extra + ".jpg";
+				bmp.Save(name, ImageFormat.Jpeg);
+			}
+		}
+
+		static void DiffImage(byte[] one, byte[] two, byte[] diff)
+		{
+			int len = Math.Min(one.Length,two.Length);
+			for(int b=0; b<len; b+=2) {
+				int n1 = (one[b+1] + (one[b]<<8));
+				int n2 = (two[b+1] + (two[b]<<8));
+				int d = Math.Abs(n2 - n1);
+				diff[b+1] = (byte)d;
+				diff[b] = (byte)(d >> 8);
+			}
 		}
 
 		static void Info(Adapter adapter)
