@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1AE86BF7-6DDC-48ED-915D-90F022F24E7D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Video4Linux</RootNamespace>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyName>video4linux-net</AssemblyName>
+    <AssemblyOriginatorKeyFile>.</AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <GenerateDocumentation>True</GenerateDocumentation>
+    <ConsolePause>False</ConsolePause>
+    <Execution>
+      <Execution clr-version="Net_2_0" />
+    </Execution>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <RunWithWarnings>False</RunWithWarnings>
+    <GenerateDocumentation>True</GenerateDocumentation>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <ConsolePause>False</ConsolePause>
+    <Execution>
+      <Execution clr-version="Net_2_0" />
+    </Execution>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Analog\Kernel\V4L2\v4l2_pix_format_mplane.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_plane_pix_format.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_sdr_format.cs" />
+    <Compile Include="Core\SearchableList.cs" />
+    <Compile Include="Core\IOControl.cs" />
+    <Compile Include="Analog\Video\Standard.cs" />
+    <Compile Include="Analog\Video\Rectangle.cs" />
+    <Compile Include="Core\AssemblyInfo.cs" />
+    <Compile Include="Analog\Buffer.cs" />
+    <Compile Include="Analog\Adapter.cs" />
+    <Compile Include="Analog\AdapterCapability.cs" />
+    <Compile Include="Analog\Audio\Input.cs" />
+    <Compile Include="Analog\Audio\InputCapability.cs" />
+    <Compile Include="Analog\Audio\Output.cs" />
+    <Compile Include="Analog\Video\Output.cs" />
+    <Compile Include="Analog\Video\Input.cs" />
+    <Compile Include="Analog\Video\InputStatus.cs" />
+    <Compile Include="Analog\Video\InputType.cs" />
+    <Compile Include="Analog\Tuner.cs" />
+    <Compile Include="Analog\TunerAudioMode.cs" />
+    <Compile Include="Analog\TunerType.cs" />
+    <Compile Include="Analog\TunerAudioReception.cs" />
+    <Compile Include="Analog\Video\Format.cs" />
+    <Compile Include="Analog\Video\OverlayFormat.cs" />
+    <Compile Include="Analog\Video\VideoFormat.cs" />
+    <Compile Include="Analog\Video\BaseFormat.cs" />
+    <Compile Include="Analog\Video\VideoCaptureFormat.cs" />
+    <Compile Include="Analog\Video\VideoOutputFormat.cs" />
+    <Compile Include="Analog\Video\OverlayCaptureFormat.cs" />
+    <Compile Include="Analog\Video\OverlayOutputFormat.cs" />
+    <Compile Include="Analog\Video\VBIFormat.cs" />
+    <Compile Include="Analog\Video\VBICaptureFormat.cs" />
+    <Compile Include="Analog\Video\VBIOutputFormat.cs" />
+    <Compile Include="Analog\Video\SlicedVBIFormat.cs" />
+    <Compile Include="Analog\Video\SlicedVBICaptureFormat.cs" />
+    <Compile Include="Analog\Video\SlicedVBIOutputFormat.cs" />
+    <Compile Include="Analog\Control.cs" />
+    <Compile Include="Analog\Video\Stream.cs" />
+    <Compile Include="Analog\CaptureMethod.cs" />
+    <Compile Include="Analog\Kernel\V4L1\video_capability.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_audio.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_audioout.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_buf_type.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_capability.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_field.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_colorspace.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_clip.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_fmtdesc.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_crop.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_framebuffer.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_input.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_format.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_operation.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_output.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_fract.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_pix_format_id.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_frequency.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_modulator.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_pix_format.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_control.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_cropcap.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_sliced_vbi_cap.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_rect.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_memory.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_std_id.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_sliced_vbi_format.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_timecode.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_priority.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_tuner.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_standard.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_vbi_format.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_requestbuffers.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_buffer.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_window.cs" />
+    <Compile Include="Analog\Kernel\V4L2\v4l2_tuner_capability.cs" />
+    <Compile Include="Analog\V4L1Adapter.cs" />
+    <Compile Include="Core\V4L1IOControl.cs" />
+    <Compile Include="Analog\Kernel\V4L1\video_type.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <MonoDevelop.ChangeLogAddIn.ChangeLogInfo policy="OneChangeLogInProjectRootDirectory" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>
