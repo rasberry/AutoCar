@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CamTest3")]
+[assembly: AssemblyTitle("CamServerOne")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CamTest3")]
+[assembly: AssemblyProduct("CamServerOne")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("34980169-4edc-4db3-9614-8747c9a3be92")]
+[assembly: Guid("4ec41e2a-1259-494a-a270-2a169ea509ff")]
 
 // Version information for an assembly consists of the following four values:
 //

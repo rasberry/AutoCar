@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace CamTest3
+namespace CamServerOne
 {
 	public class LockBitmap
 	{
@@ -124,29 +124,35 @@ namespace CamTest3
 		/// <param name="color"></param>
 		public void SetPixel(int x, int y, Color color)
 		{
+			SetPixel(x,y,color.ToArgb()); //seems to be bgra?
+		}
+
+		public void SetPixel(int x, int y, int value) //value should be rgba
+		{
 			// Get color components count
 			int cCount = Depth / 8;
 	 
 			// Get start index of the specified pixel
 			int i = ((y * Width) + x) * cCount;
-	 
+
 			if (Depth == 32) // For 32 bpp set Red, Green, Blue and Alpha
 			{
-				Pixels[i] = color.B;
-				Pixels[i + 1] = color.G;
-				Pixels[i + 2] = color.R;
-				Pixels[i + 3] = color.A;
+				byte[] c = BitConverter.GetBytes(value);
+				Buffer.BlockCopy(c,0,Pixels,0,4);
 			}
 			if (Depth == 24) // For 24 bpp set Red, Green and Blue
 			{
-				Pixels[i] = color.B;
-				Pixels[i + 1] = color.G;
-				Pixels[i + 2] = color.R;
+				byte[] c = BitConverter.GetBytes(value);
+				Buffer.BlockCopy(c,0,Pixels,0,3);
+			}
+			if (Depth == 16) //For grayscale 16bpp
+			{
+				byte[] c = BitConverter.GetBytes(value);
+				Buffer.BlockCopy(c,0,Pixels,0,2);
 			}
 			if (Depth == 8)
-			// For 8 bpp set color value (Red, Green and Blue values are the same)
 			{
-				Pixels[i] = color.B;
+				Pixels[i] = (byte)value;
 			}
 		}
 	}
