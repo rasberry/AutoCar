@@ -31,7 +31,10 @@ namespace AutoCar
 		int _w;
 		int _h;
 
-		private byte[] lastImage;
+		//private byte[] lastImage;
+		private Func<Bitmap> lastImage;
+		private byte[] bufferone;
+		private byte[] buffertwo;
 		private object lastlock = new object();
 
 		public void Start()
@@ -40,11 +43,11 @@ namespace AutoCar
 			var adaptertwo = new Adapter(_devicetwo);
 			VideoCaptureFormat fone, ftwo;
 			
-			byte[] bufferone = Init(adapterone,out fone);
-			byte[] buffertwo = Init(adaptertwo,out ftwo);
+			bufferone = Init(adapterone,out fone);
+			buffertwo = Init(adaptertwo,out ftwo);
 			_w = (int)fone.Width;
 			_h = (int)fone.Height;
-			lastImage = new byte[_w * _h * 2];
+			//lastImage = new byte[_w * _h * 2];
 
 			adapterone.StartStreaming();
 			adaptertwo.StartStreaming();
@@ -69,7 +72,8 @@ namespace AutoCar
 					//WL("ellapsed "+sw.ElapsedMilliseconds);
 					
 					lock(lastlock) {
-						DiffImage(bufferone,buffertwo,lastImage);
+						//DiffImage(fone.Width,fone.Height,bufferone,buffertwo,lastImage);
+						lastImage = StereoProcess.Go(fone.Width,fone.Height,bufferone,buffertwo);
 					}
 					//RawToPGM("D",stamp,fone,bufferdif,true);
 					//WL("ellapsed "+sw.ElapsedMilliseconds);
@@ -82,13 +86,30 @@ namespace AutoCar
 
 		public byte[] GetImage()
 		{
-			byte[] copy = null;
+			//byte[] copy = null;
+			//lock(lastlock) {
+			//	//copy = new byte[lastImage.Length];
+			//	//System.Buffer.BlockCopy(lastImage,0,copy,0,lastImage.Length);
+			//	copy = RawGreyToImage(_w,_h,lastImage);
+			//	//Console.WriteLine(BitConverter.ToString(copy));
+			//}
+			//return copy;
 			lock(lastlock) {
-				//copy = new byte[lastImage.Length];
-				//System.Buffer.BlockCopy(lastImage,0,copy,0,lastImage.Length);
-				copy = RawGreyToImage(_w,_h,lastImage);
-				//Console.WriteLine(BitConverter.ToString(copy));
+				Bitmap b = lastImage.Invoke(); //create the copy now
+				MemoryStream m = new MemoryStream();
+				b.Save(m,ImageFormat.Jpeg);
+				return m.ToArray();
 			}
+		}
+
+		public byte[] GetLeftImage()
+		{
+			byte[] copy = RawGreyToImage(_w,_h,bufferone);
+			return copy;
+		}
+		public byte[] GetRightImage()
+		{
+			byte[] copy = RawGreyToImage(_w,_h,buffertwo);
 			return copy;
 		}
 
@@ -113,14 +134,54 @@ namespace AutoCar
 			//WL("Read "+r+" bytes");
 		}
 
-		static void DiffImage(byte[] one, byte[] two, byte[] diff)
+		const int window = 2;
+		static void DiffImage(uint w,uint h, byte[] one, byte[] two, byte[] diff)
+		{
+			int len = Math.Min(one.Length,two.Length);
+			uint wxsize = w/window;
+			uint wysize = h/window;
+
+			for(uint wx=0; wx<wxsize; wx++)
+			{
+				for(uint wy=0; wy<wysize; wy++)
+				{
+					double sum = 0;
+					for(uint vx=0; vx<window; vx++)
+					{
+						for(uint vy=0; vy<window; vy++)
+						{
+							uint x = wx*window+vx;
+							uint y = wy*window+vy;
+							uint b = y*w + x;
+							int vone = (one[b+1] + (one[b]<<8));
+							int vtwo = (two[b+1] + (two[b]<<8));
+							sum += vone > vtwo ? vone - vtwo : vtwo - vone;
+						}
+					}
+					short avg = (short)(sum / window * window);
+					for(uint vx=0; vx<window; vx++)
+					{
+						for(uint vy=0; vy<window; vy++)
+						{
+							uint x = wx*window+vx;
+							uint y = wy*window+vy;
+							uint b = y*w + x;
+							diff[b*2+1] = (byte)(avg & 255);
+							diff[b*2] = (byte)(avg >> 8);
+						}
+					}
+				}
+			}
+		}
+
+		static void DiffImageOne(uint w, uint h, byte[] one, byte[] two, byte[] diff)
 		{
 			int len = Math.Min(one.Length,two.Length);
 			for(int b=0; b<len; b+=2) {
 				int n1 = (one[b+1] + (one[b]<<8));
 				int n2 = (two[b+1] + (two[b]<<8));
 				int d = Math.Abs(n2 - n1);
-				diff[b+1] = (byte)d;
+				diff[b+1] = (byte)(d & 255);
 				diff[b] = (byte)(d >> 8);
 			}
 		}

@@ -17,57 +17,26 @@ namespace AutoCar
 	{
 		static void Main(string[] args)
 		{
-			if (!ParseArgs(args)) { return; }
 			SimpleServer server = null;
 			VideoGrabber hand = null;
 
 			try {
-				hand = new VideoGrabber(DeviceOne,DeviceTwo);
+				hand = new VideoGrabber(Config.DeviceOne,Config.DeviceTwo);
 				Thread vidworker = new Thread(new ThreadStart(hand.Start));
 				vidworker.Start();
 
-				server = new SimpleServer(port);
-				server.ImageProviderFunc = hand.GetImage;
+				server = new SimpleServer(Config.Port);
+				server.ImgSource = hand;
 				Thread webworker = new Thread(new ThreadStart(server.listen));
 				webworker.Start();
 
-				WL("Server started on port "+port+". Press any key to shutdown");
+				WL("Server started on port "+Config.Port+". Press any key to shutdown");
 				ConsoleKeyInfo key = Console.ReadKey(true);
 			}
 			finally {
 				if (server != null) { server.stop(); }
 				if (hand != null) { hand.Stop(); }
 			}
-		}
-
-		static string DeviceOne = null;
-		static string DeviceTwo = null;
-		static int port = 8080;
-
-		static bool ParseArgs(string[] args)
-		{
-			int len = args.Length;
-			for(int i=0; i<len; i++)
-			{
-				string c = args[i];
-				if (c == "-d" && len>i) {
-					if (DeviceOne == null) {
-						DeviceOne = args[++i];
-					} else {
-						DeviceTwo = args[++i];
-					}
-				}
-				if (c == "-p" && len>i) {
-					string sport = args[++i];
-					if (!int.TryParse(sport,out port)) {
-						WL("Bad port "+sport);
-						return false;
-					}
-				}
-			}
-			if (DeviceOne == null) { DeviceOne = "/dev/video0"; }
-			if (DeviceTwo == null) { DeviceTwo = "/dev/video1"; }
-			return true;
 		}
 
 		static void Info(Adapter adapter)
